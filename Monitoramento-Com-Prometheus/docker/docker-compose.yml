@@ -1,0 +1,32 @@
+version: '3'
+services:
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+    - 9090:9090
+    command:
+    - --config.file=/etc/prometheus/prometheus.yml
+    volumes:
+    - /etc/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    restart: always
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana-server
+    user: "1000"
+    environment:
+    - GF_SECURITY_ADMIN_PASSWORD=tutorial2022
+    depends_on:
+    - prometheus
+    ports:
+    - 3000:3000
+    restart: always
+    
+  node-exporter:
+    image: prom/node-exporter
+    container_name: node-exporter
+    restart: always
+    ports: 
+    - 9100:9100
+  
